@@ -72,6 +72,7 @@ String[] tabInstructionFlecheHautDroite = {"50", "51", "52", "53", "54", "55"};
 String[] tabInstructionFlecheHautGauche = {"60", "61", "62", "63", "64", "65"};
 String[] tabInstructionFlecheBasDroite = {"70", "71", "72", "73", "74", "75"};
 String[] tabInstructionFlecheBasGauche = {"80", "81", "82", "83", "84", "85"};
+String[][] tabInstructionFleche = {"10", "11", "20", "21", "30", "31", "40", "41", "10", "11", "20", "21", "30", "31", "40", "41"}
 String instructionArret = "90";
 boolean LED1 = false;
 boolean LED2 = false;
