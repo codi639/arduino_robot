@@ -72,7 +72,7 @@ String[] tabInstructionFlecheHautDroite = {"50", "51", "52", "53", "54", "55"};
 String[] tabInstructionFlecheHautGauche = {"60", "61", "62", "63", "64", "65"};
 String[] tabInstructionFlecheBasDroite = {"70", "71", "72", "73", "74", "75"};
 String[] tabInstructionFlecheBasGauche = {"80", "81", "82", "83", "84", "85"};
-String[][] tabInstructionFleche = {"10", "11", "20", "21", "30", "31", "40", "41", "10", "11", "20", "21", "30", "31", "40", "41"}
+//String[][] tabInstructionFleche = {"10", "11", "20", "21", "30", "31", "40", "41", "10", "11", "20", "21", "30", "31", "40", "41"};
 String instructionArret = "90";
 boolean LED1 = false;
 boolean LED2 = false;
@@ -88,7 +88,7 @@ Server serveur;
 void setup()
 {
   background(255);
-  size(750, 500);
+  size(750, 900);
   textSize(24);
   fill(0);
   // imageDuClient = loadImage("Client.jpg");
@@ -97,28 +97,38 @@ void setup()
   LEDOff = loadImage("../images/bas.png");
   porteFermee = loadImage("../images/intensitee_bas.png");
   porteOuverte = loadImage("../images/intensitee_haut.png");
-  porteOuverte.resize(112, 188);
+  porteOuverte.resize(112, 200);
 
   flecheHaut = loadImage("../images/haut.png");
+  flecheHaut.resize(150, 170);
   flecheBas = loadImage("../images/bas.png");
+  flecheBas.resize(150, 170);
   flecheGauche = loadImage("../images/gauche.png");
+  flecheGauche.resize(150, 170);
   flecheDroite = loadImage("../images/droite.png");
+  flecheDroite.resize(150, 170);
   flecheHautDroite = loadImage("../images/haut_droite.png");
+  flecheHautDroite.resize(100, 120);
   flecheHautGauche = loadImage("../images/haut_gauche.png");
+  flecheHautGauche.resize(150, 170);
   flecheBasDroite = loadImage("../images/bas_droite.png");
+  flecheBasDroite.resize(150, 170);
   flecheBasGauche = loadImage("../images/bas_gauche.png");
+  flecheBasGauche.resize(150, 170);
   flecheIntensiteeBas = loadImage("../images/intensitee_bas.png");
+  flecheIntensiteeBas.resize(150, 170);
   flecheIntensiteeHaut = loadImage("../images/intensitee_haut.png");
+  flecheIntensiteeHaut.resize(150, 170);
 
   instructionPorte = "00";
   porte = porteOuverte;
 
   // Tentative de connexion au serveur 192.168.1.148, écoutant sur le port 5000.
   println("Tentative de connexion avec le serveur...");
-  text("Tentative de connexion avec le serveur...", 30, 60);
-  client = new Client(this, IPServeur, portServeur);
+  //text("Tentative de connexion avec le serveur...", 30, 60);
+  /*client = new Client(this, IPServeur, portServeur);
   serveur = new Server(this, portServeur);
-  //client.write(instructionPorte);
+  //client.write(instructionPorte);*/
 }
 
 /******************************************
@@ -127,18 +137,18 @@ void setup()
 void draw()
 {
   background(255);
-  for (int i = 0; i < 4; i++) {
+  /*for (int i = 0; i < 4; i++) {
     if (LED[i] == true) {
       image(LEDOn, LEDPos[i], 100);
     } else {
       image(LEDOff, LEDPos[i], 100);
     }
   }
-  image(porte, 320, 310);
+  image(porte, 320, 310);*/
   /*if ()*/
 
   // Vérifier s'il y a une connexion active au serveur, et en informer l'utilisateur.
-  if(client.active())
+  /*if(client.active())
   {    
     text("Le client est connecté au serveur " + IPServeur + ".", 30, 60);
     println("Le client est connecté au serveur " + IPServeur + ".");
@@ -159,7 +169,20 @@ void draw()
     text("Le client n'a pas pu se connecter au serveur " + IPServeur, 30, 60);
     text("ou le serveur n'est plus disponible.", 30, 90);
     println("Le client n'a pas pu se connecter au serveur " + IPServeur + " ou le serveur n'est plus disponible.");
-  }
+  }*/
+
+  text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
+  image(flecheHaut, 310, 75);
+  image(flecheBas, 310, 275);
+  image(flecheGauche, 110, 175);
+  image(flecheDroite, 510, 175);
+  image(flecheHautDroite, 510, 75);
+  image(flecheHautGauche, 110, 75);
+  image(flecheBasDroite, 510, 275);
+  image(flecheBasGauche, 110, 275);
+  image(flecheIntensiteeBas, 310, 175);
+  image(flecheIntensiteeHaut, 310, 375);
+
 }
 
 void mouseClicked(){
