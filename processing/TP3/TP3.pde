@@ -64,6 +64,7 @@ String instructionPorte;
 boolean etatPorte;
 String instructionLED;
 String[] tabInstructionLED = {"10", "11", "20", "21", "30", "31", "40", "41"};
+/*
 String[] tabInstructionFlecheHaut = {"10", "11", "12", "13", "14", "15"};
 String[] tabInstructionFlecheBas = {"20", "21", "22", "23", "24", "25"};
 String[] tabInstructionFlecheGauche = {"30", "31", "32", "33", "34", "35"};
@@ -71,9 +72,17 @@ String[] tabInstructionFlecheDroite = {"40", "41", "42", "43", "44", "45"};
 String[] tabInstructionFlecheHautDroite = {"50", "51", "52", "53", "54", "55"};
 String[] tabInstructionFlecheHautGauche = {"60", "61", "62", "63", "64", "65"};
 String[] tabInstructionFlecheBasDroite = {"70", "71", "72", "73", "74", "75"};
-String[] tabInstructionFlecheBasGauche = {"80", "81", "82", "83", "84", "85"};
-//String[][] tabInstructionFleche = {"10", "11", "20", "21", "30", "31", "40", "41", "10", "11", "20", "21", "30", "31", "40", "41"};
+String[] tabInstructionFlecheBasGauche = {"80", "81", "82", "83", "84", "85"};*/
+String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
+String instructionFleche;
 String instructionArret = "90";
+String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"};
+String instructionIntensitee;
+int intensite;
+int[][] tabPositionFleche = {{270, 75}, {270, 315}, {270, 195}, {420, 195}, {110, 195}, {420, 75}, {110, 75}, {420, 315}, {110, 315}};
+int[][] tabPositionIntensitee = {{300, 475}, {300, 575}};
+
+String instructionRobot;
 boolean LED1 = false;
 boolean LED2 = false;
 boolean LED3 = false;
@@ -81,7 +90,19 @@ boolean LED4 = false;
 boolean[] LED = {false, false, false, false};
 int[] LEDPos = {10, 180, 360, 540};
 Server serveur;
-
+/*Position des images :
+  flecheHaut, 270, 75
+  flecheBas, 270, 315
+  flecheGauche, 110, 195
+  flecheDroite, 420, 195
+  flecheHautDroite, 420, 75
+  flecheHautGauche, 110, 75
+  flecheBasDroite, 420, 315
+  flecheBasGauche, 110, 315
+  flecheIntensiteeBas, 320, 575
+  flecheIntensiteeHaut, 320, 475
+  arret, 270, 195
+*/
 /******************************************
 * Fonction setup()                        *
 *******************************************/
@@ -98,27 +119,32 @@ void setup()
   porteFermee = loadImage("../images/intensitee_bas.png");
   porteOuverte = loadImage("../images/intensitee_haut.png");
   porteOuverte.resize(112, 200);
-
+  intensite = 1;
+  instructionFleche = "2";
+{
   flecheHaut = loadImage("../images/haut.png");
-  flecheHaut.resize(150, 170);
   flecheBas = loadImage("../images/bas.png");
-  flecheBas.resize(150, 170);
   flecheGauche = loadImage("../images/gauche.png");
-  flecheGauche.resize(150, 170);
   flecheDroite = loadImage("../images/droite.png");
-  flecheDroite.resize(150, 170);
   flecheHautDroite = loadImage("../images/haut_droite.png");
-  flecheHautDroite.resize(100, 120);
   flecheHautGauche = loadImage("../images/haut_gauche.png");
-  flecheHautGauche.resize(150, 170);
   flecheBasDroite = loadImage("../images/bas_droite.png");
-  flecheBasDroite.resize(150, 170);
   flecheBasGauche = loadImage("../images/bas_gauche.png");
-  flecheBasGauche.resize(150, 170);
-  flecheIntensiteeBas = loadImage("../images/intensitee_bas.png");
-  flecheIntensiteeBas.resize(150, 170);
+  arret = loadImage("../images/basic_circle.png");
   flecheIntensiteeHaut = loadImage("../images/intensitee_haut.png");
-  flecheIntensiteeHaut.resize(150, 170);
+  flecheIntensiteeBas = loadImage("../images/intensitee_bas.png");
+  flecheHaut.resize(200, 180);
+  flecheBas.resize(200, 180);
+  flecheGauche.resize(200, 180);
+  flecheDroite.resize(200, 180);
+  flecheHautDroite.resize(200, 180);
+  flecheHautGauche.resize(200, 180);
+  flecheBasDroite.resize(200, 180);
+  flecheBasGauche.resize(200, 180);
+  arret.resize(200, 180);
+  flecheIntensiteeHaut.resize(120, 100);
+  flecheIntensiteeBas.resize(120, 100);
+}
 
   instructionPorte = "00";
   porte = porteOuverte;
@@ -172,25 +198,51 @@ void draw()
   }*/
 
   text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
-  image(flecheHaut, 310, 75);
-  image(flecheBas, 310, 275);
-  image(flecheGauche, 110, 175);
-  image(flecheDroite, 510, 175);
-  image(flecheHautDroite, 510, 75);
+  image(flecheHaut, 270, 75);
+  image(flecheBas, 270, 315);
+  image(flecheGauche, 110, 195);
+  image(flecheDroite, 420, 195);
+  image(flecheHautDroite, 420, 75);
   image(flecheHautGauche, 110, 75);
-  image(flecheBasDroite, 510, 275);
-  image(flecheBasGauche, 110, 275);
-  image(flecheIntensiteeBas, 310, 175);
-  image(flecheIntensiteeHaut, 310, 375);
+  image(flecheBasDroite, 420, 315);
+  image(flecheBasGauche, 110, 315);
+  image(flecheIntensiteeBas, 300, 575);
+  image(flecheIntensiteeHaut, 300, 475);
+  image(arret, 270, 195);
+  text("Intensité : " + intensite, 320, 700);
+  instructionRobot = instructionFleche + char(intensite + 48);
+  text("Instruction envoyée au robot : " + instructionRobot, 30, 800);
 
 }
 
 void mouseClicked(){
-  for (int i = 0; i < 4; i++) {
-    if (mouseX > LEDPos[i] && mouseX < LEDPos[i] + 220 &&
-        mouseY > 100 && mouseY < 100 + 220) {
-      LED[i] = !LED[i];
-      client.write(tabInstructionLED[i*2 + (LED[i] ? 0 : 1)]);
+  for(int i = 0; i < 9; i++){
+    if (mouseX > tabPositionFleche[i][0] && mouseX < tabPositionFleche[i][0] + 200 &&
+        mouseY > tabPositionFleche[i][1] && mouseY < tabPositionFleche[i][1] + 180) {
+      instructionFleche = tabInstructionFleche[i];
+      //client.write(instructionFleche);
+      println("j'ai écrit", instructionFleche);
+    }
+  }
+  for (int j = 0; j < 2; j++){
+    if (mouseX > tabPositionIntensitee[j][0] && mouseX < tabPositionIntensitee[j][0] + 120 &&
+        mouseY > tabPositionIntensitee[j][1] && mouseY < tabPositionIntensitee[j][1] + 100) {
+      //instructionIntensitee = tabInstructionIntensitee[j];
+      println("j'ai écrit", tabInstructionIntensitee[j]);
+      if (j == 0){
+        intensite = intensite + 1;
+      }
+      if (j == 1){
+        intensite = intensite - 1;
+      }
+      if (intensite > 5){
+        intensite = 5;
+      }
+      if (intensite < 1){
+        intensite = 1;
+      }
+      println(intensite);
+        
     }
   }
 }
