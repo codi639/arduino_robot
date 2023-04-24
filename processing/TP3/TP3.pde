@@ -155,6 +155,7 @@ void setup()
   /*client = new Client(this, IPServeur, portServeur);
   serveur = new Server(this, portServeur);
   //client.write(instructionPorte);*/
+  client = new Client(this, IPServeur, portServeur);
 }
 
 /******************************************
@@ -174,18 +175,18 @@ void draw()
   /*if ()*/
 
   // Vérifier s'il y a une connexion active au serveur, et en informer l'utilisateur.
-  /*if(client.active())
+  if(client.active())
   {    
     text("Le client est connecté au serveur " + IPServeur + ".", 30, 60);
-    println("Le client est connecté au serveur " + IPServeur + ".");
+    //println("Le client est connecté au serveur " + IPServeur + ".");
     if (client.available() > 0) {
       String message = client.readStringUntil('\n');
       if (message != null) {
         message = message.substring(0, message.length() - 1);
         if (message.equals("1")) {
-          porte = porteOuverte;
+          text("Le serveur a reçu la commande " + instructionRobot + ".", 30, 90);
         } else if (message.equals("0")) {
-          porte = porteFermee;
+          text("Le serveur n'a pas reçu la commande " + instructionRobot + ".", 30, 90);
         }
       }
     }
@@ -195,7 +196,7 @@ void draw()
     text("Le client n'a pas pu se connecter au serveur " + IPServeur, 30, 60);
     text("ou le serveur n'est plus disponible.", 30, 90);
     println("Le client n'a pas pu se connecter au serveur " + IPServeur + " ou le serveur n'est plus disponible.");
-  }*/
+  }
 
   text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
   image(flecheHaut, 270, 75);
@@ -222,6 +223,8 @@ void mouseClicked(){
       instructionFleche = tabInstructionFleche[i];
       //client.write(instructionFleche);
       println("j'ai écrit", instructionFleche);
+      instructionRobot = instructionFleche + char(intensite + 48);
+      client.write(instructionRobot);
     }
   }
   for (int j = 0; j < 2; j++){
