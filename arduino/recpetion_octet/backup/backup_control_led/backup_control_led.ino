@@ -1,9 +1,11 @@
 
 #include <WiFiNINA.h>
-#define BROCHE_DIRECTION_M1M3_GND 4
-#define BROCHE_DIRECTION_M2M4_GND 7
-#define BROCHE_VITESSE_M1M3_GND 5
-#define BROCHE_VITESSE_M2M4_GND 6
+#define BROCHE_DIRECTION_M1_GND 5
+#define BROCHE_DIRECTION_M3_GND 6
+#define BROCHE_VITESSE_M1M3 0
+#define BROCHE_VITESSE_M2M4 1
+#define BROCHE_DIRECTION_M2_GND 3
+#define BROCHE_DIRECTION_M4_GND 9
 
 WiFiServer serveur(5000);
 
@@ -15,7 +17,7 @@ void setup() {
   Serial.begin(9600);
 
   // Les broches 3 à 8, servant au contrôle des roues du robot, sont configurées pour la sortie d'un signal.
-  for (noBroche = 3; noBroche <= 9; noBroche++)
+  for (noBroche = 3; noBroche <= 8; noBroche++)
   {
     pinMode(noBroche, OUTPUT);
   }
@@ -47,11 +49,11 @@ void loop() {
                 Serial.print("première valeur d'intensité "); Serial.println(intensitee);
                 intensitee = intensitee - 48;
                 //intensitee =  (intensitee - 1) * (165) / 4 + 50;
-                //Serial.print("intensité "); Serial.println(intensitee);
+                Serial.print("intensité "); Serial.println(intensitee);
                 intensitee = (6 - intensitee) * (225 - 50) / 4 + 50;
-                //Serial.print("première valeur d'intensité "); Serial.println(intensitee);
+                Serial.print("première valeur d'intensité "); Serial.println(intensitee);
                 //intensitee = intensitee + 2050; //ajoutée uniquement par soucis de valeur (problème de serial.read)
-                //intensitee = (intensitee * -1) + 500 - 200;
+                intensitee = (intensitee * -1) + 500 - 200;
                 requeteClient[0] = actionRobot;
                 requeteClient[1] = intensitee;
                 Serial.print("seconde valeur d'actionRobot "); Serial.println(actionRobot);
@@ -61,64 +63,66 @@ void loop() {
                 {
                     case '0':
                         Serial.println("Le robot avance en ligne droite, pleine vitesse.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, HIGH);
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW);
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 0);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 255); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 255);
                         break;
                     case '1':
                         Serial.println("Le robot recule, pleine vitesse.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, LOW); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 255); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 0);
                         break;
                     case '2':
                         Serial.println("Arret du robot.");
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 0);
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 0);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 0);
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 0);
                         break;
                     case '3':
                         Serial.println("Le robot pivote sur la droite.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, LOW);
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW);
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 255); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 0);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 255); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 0);
                         break;
                     case '4':
                         Serial.println("Le robot pivote sur la gauche.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, HIGH);
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH);
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 255);
                         break;
                     case '5':
                         Serial.println("Le robot avance vers la droite.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, HIGH); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, intensitee);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 0);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 255); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, intensitee);
                         break;
                     case '6':
                         Serial.println("Le robot avance vers la gauche.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, HIGH); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, intensitee);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 0);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, intensitee); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 255);
                         break;
                     case '7':
                         Serial.println("Le robot recule vers la droite.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, LOW); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, intensitee);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, intensitee); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, 255);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 0);
                         break;
                     case '8':
                         Serial.println("Le robot recule vers la gauche.");
-                        digitalWrite(BROCHE_DIRECTION_M1M3_GND, LOW); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
-                        digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH); // LOW ou 0.
-                        analogWrite(BROCHE_VITESSE_M2M4_GND, intensitee);
+                        analogWrite(BROCHE_DIRECTION_M1_GND, 255); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M3_GND, intensitee);
+                        analogWrite(BROCHE_DIRECTION_M2_GND, 0); // LOW ou 0.
+                        analogWrite(BROCHE_DIRECTION_M4_GND, 0);
                         break;
                 }
             }
