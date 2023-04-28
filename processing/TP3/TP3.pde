@@ -64,15 +64,6 @@ String instructionPorte;
 boolean etatPorte;
 String instructionLED;
 String[] tabInstructionLED = {"10", "11", "20", "21", "30", "31", "40", "41"};
-/*
-String[] tabInstructionFlecheHaut = {"10", "11", "12", "13", "14", "15"};
-String[] tabInstructionFlecheBas = {"20", "21", "22", "23", "24", "25"};
-String[] tabInstructionFlecheGauche = {"30", "31", "32", "33", "34", "35"};
-String[] tabInstructionFlecheDroite = {"40", "41", "42", "43", "44", "45"};
-String[] tabInstructionFlecheHautDroite = {"50", "51", "52", "53", "54", "55"};
-String[] tabInstructionFlecheHautGauche = {"60", "61", "62", "63", "64", "65"};
-String[] tabInstructionFlecheBasDroite = {"70", "71", "72", "73", "74", "75"};
-String[] tabInstructionFlecheBasGauche = {"80", "81", "82", "83", "84", "85"};*/
 String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
 String instructionFleche;
 String instructionArret = "90";
@@ -89,20 +80,7 @@ boolean LED3 = false;
 boolean LED4 = false;
 boolean[] LED = {false, false, false, false};
 int[] LEDPos = {10, 180, 360, 540};
-Server serveur;
-/*Position des images :
-  flecheHaut, 270, 75
-  flecheBas, 270, 315
-  flecheGauche, 110, 195
-  flecheDroite, 420, 195
-  flecheHautDroite, 420, 75
-  flecheHautGauche, 110, 75
-  flecheBasDroite, 420, 315
-  flecheBasGauche, 110, 315
-  flecheIntensiteeBas, 320, 575
-  flecheIntensiteeHaut, 320, 475
-  arret, 270, 195
-*/
+
 /******************************************
 * Fonction setup()                        *
 *******************************************/
@@ -164,20 +142,11 @@ void setup()
 void draw()
 {
   background(255);
-  /*for (int i = 0; i < 4; i++) {
-    if (LED[i] == true) {
-      image(LEDOn, LEDPos[i], 100);
-    } else {
-      image(LEDOff, LEDPos[i], 100);
-    }
-  }
-  image(porte, 320, 310);*/
-  /*if ()*/
 
   // Vérifier s'il y a une connexion active au serveur, et en informer l'utilisateur.
   if(client.active())
   {    
-    text("Le client est connecté au serveur " + IPServeur + ".", 30, 60);
+    text("Le client est connecté au serveur " + IPServeur + ".", 140, 60);
     //println("Le client est connecté au serveur " + IPServeur + ".");
     if (client.available() > 0) {
       String message = client.readStringUntil('\n');

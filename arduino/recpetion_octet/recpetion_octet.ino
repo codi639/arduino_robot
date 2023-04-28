@@ -4,8 +4,12 @@
 #define BROCHE_DIRECTION_M2M4_GND 7
 #define BROCHE_VITESSE_M1M3_GND 5
 #define BROCHE_VITESSE_M2M4_GND 6
+#define BROCHE_LED 2
 
 WiFiServer serveur(5000);
+WiFiClient serveurProcessing;
+
+String adresseClient[4];
 
 
 void setup() {
@@ -15,11 +19,13 @@ void setup() {
   Serial.begin(9600);
 
   // Les broches 3 à 8, servant au contrôle des roues du robot, sont configurées pour la sortie d'un signal.
-  for (noBroche = 3; noBroche <= 9; noBroche++)
+  for (noBroche = 2; noBroche <= 9; noBroche++)
   {
     pinMode(noBroche, OUTPUT);
   }
 
+  connexionWiFi();
+  connexionServeur();
   
 }
 
@@ -30,13 +36,19 @@ void loop() {
     int intensitee;
 
 
+    if(!serveurProcessing.connected()){
+      Serial.println("Perte de la connexion au serveur.");
+      connexionServeur();
+    }
+
     if(WiFi.status() != WL_CONNECTED) {
         Serial.println("\nArduino n'est plus connecté au réseau Wi-Fi.");
+        digitalWrite(BROCHE_LED, LOW);
         connexionWiFi();
     }
 
     client = serveur.available();
-
+    
     if(client){
         Serial.println("\nUn client est connecté.");
             if(client.available() >= 2){
@@ -77,6 +89,11 @@ void loop() {
                         Serial.println("Arret du robot.");
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 0);
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 0);
+                        adresseClient[0] = String(client.remoteIP()[0]);
+                        adresseClient[1] = String(client.remoteIP()[1]);
+                        adresseClient[2] = String(client.remoteIP()[2]);
+                        adresseClient[3] = String(client.remoteIP()[3]);
+                        serveurProcessing.print(adresseClient[0] +"."+ adresseClient[1] +"."+ adresseClient[2] +"."+adresseClient[3] + '\n');
                         break;
                     case '3':
                         Serial.println("Le robot pivote sur la droite.");
@@ -177,4 +194,13 @@ void connexionWiFi() {
 
   // Demander au serveur de débuter l'écoute des demandes de connexions des clients.
   serveur.begin();
+
+  digitalWrite(BROCHE_LED, HIGH);
+}
+
+void connexionServeur(){
+  while(!serveurProcessing.connect("10.10.212.18", 5000)){
+    Serial.print("Tentative de connexion au serveur...\n");
+  }
+  Serial.print("Le robot est connecté au serveur\n");
 }
