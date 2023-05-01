@@ -4,7 +4,8 @@
 #define BROCHE_DIRECTION_M2M4_GND 7
 #define BROCHE_VITESSE_M1M3_GND 5
 #define BROCHE_VITESSE_M2M4_GND 6
-#define BROCHE_LED 2
+#define BROCHE_LED_WIFI 2
+#define BROCHE_LED_ACCESS 0
 
 WiFiServer serveur(5000);
 WiFiClient serveurProcessing;
@@ -34,22 +35,28 @@ void loop() {
     char requeteClient[15];
     char actionRobot;
     int intensitee;
+    int intensiteAEnvoyer;
 
 
     if(!serveurProcessing.connected()){
       Serial.println("Perte de la connexion au serveur.");
+      digitalWrite(BROCHE_LED_ACCESS, LOW);
       connexionServeur();
     }
 
     if(WiFi.status() != WL_CONNECTED) {
         Serial.println("\nArduino n'est plus connecté au réseau Wi-Fi.");
-        digitalWrite(BROCHE_LED, LOW);
+        digitalWrite(BROCHE_LED_WIFI, LOW);
         connexionWiFi();
     }
 
     client = serveur.available();
     
     if(client){
+        adresseClient[0] = String(client.remoteIP()[0]);
+        adresseClient[1] = String(client.remoteIP()[1]);
+        adresseClient[2] = String(client.remoteIP()[2]);
+        adresseClient[3] = String(client.remoteIP()[3]);
         Serial.println("\nUn client est connecté.");
             if(client.available() >= 2){
                 //Serial.println("\nUn client a envoyé une requête.");
@@ -58,9 +65,10 @@ void loop() {
                 Serial.print("première valeur d'actionRobot "); Serial.println(actionRobot);
                 Serial.print("première valeur d'intensité "); Serial.println(intensitee);
                 intensitee = intensitee - 48;
+                intensiteAEnvoyer = intensitee;
                 //intensitee =  (intensitee - 1) * (165) / 4 + 50;
                 //Serial.print("intensité "); Serial.println(intensitee);
-                intensitee = (6 - intensitee) * (225 - 50) / 4 + 50;
+                intensitee = (6 - intensitee) * (225 - 50) / 4 + 25;
                 //Serial.print("première valeur d'intensité "); Serial.println(intensitee);
                 //intensitee = intensitee + 2050; //ajoutée uniquement par soucis de valeur (problème de serial.read)
                 //intensitee = (intensitee * -1) + 500 - 200;
@@ -77,6 +85,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW);
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 0 + intensiteAEnvoyer);
                         break;
                     case '1':
                         Serial.println("Le robot recule, pleine vitesse.");
@@ -84,16 +93,13 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH); // LOW ou 0.
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 1 + intensiteAEnvoyer);
                         break;
                     case '2':
                         Serial.println("Arret du robot.");
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 0);
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 0);
-                        adresseClient[0] = String(client.remoteIP()[0]);
-                        adresseClient[1] = String(client.remoteIP()[1]);
-                        adresseClient[2] = String(client.remoteIP()[2]);
-                        adresseClient[3] = String(client.remoteIP()[3]);
-                        serveurProcessing.print(adresseClient[0] +"."+ adresseClient[1] +"."+ adresseClient[2] +"."+adresseClient[3] + '\n');
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 2 + intensiteAEnvoyer);
                         break;
                     case '3':
                         Serial.println("Le robot pivote sur la droite.");
@@ -101,6 +107,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW);
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 3 + intensiteAEnvoyer);
                         break;
                     case '4':
                         Serial.println("Le robot pivote sur la gauche.");
@@ -108,6 +115,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH);
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 4 + intensiteAEnvoyer);
                         break;
                     case '5':
                         Serial.println("Le robot avance vers la droite.");
@@ -115,6 +123,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, intensitee);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW); // LOW ou 0.
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 5 + intensiteAEnvoyer);
                         break;
                     case '6':
                         Serial.println("Le robot avance vers la gauche.");
@@ -122,6 +131,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, LOW); // LOW ou 0.
                         analogWrite(BROCHE_VITESSE_M2M4_GND, intensitee);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 6 + intensiteAEnvoyer);
                         break;
                     case '7':
                         Serial.println("Le robot recule vers la droite.");
@@ -129,6 +139,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, intensitee);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH); // LOW ou 0.
                         analogWrite(BROCHE_VITESSE_M2M4_GND, 255);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 7 + intensiteAEnvoyer);
                         break;
                     case '8':
                         Serial.println("Le robot recule vers la gauche.");
@@ -136,6 +147,7 @@ void loop() {
                         analogWrite(BROCHE_VITESSE_M1M3_GND, 255);
                         digitalWrite(BROCHE_DIRECTION_M2M4_GND, HIGH); // LOW ou 0.
                         analogWrite(BROCHE_VITESSE_M2M4_GND, intensitee);
+                        serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 8 + intensiteAEnvoyer);
                         break;
                 }
             }
@@ -195,7 +207,7 @@ void connexionWiFi() {
   // Demander au serveur de débuter l'écoute des demandes de connexions des clients.
   serveur.begin();
 
-  digitalWrite(BROCHE_LED, HIGH);
+  digitalWrite(BROCHE_LED_WIFI, HIGH);
 }
 
 void connexionServeur(){
@@ -203,4 +215,5 @@ void connexionServeur(){
     Serial.print("Tentative de connexion au serveur...\n");
   }
   Serial.print("Le robot est connecté au serveur\n");
+  digitalWrite(BROCHE_LED_ACCESS, HIGH);
 }
