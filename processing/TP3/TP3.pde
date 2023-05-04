@@ -36,14 +36,13 @@ Client client;
 // Adresse IP du serveur.
 //String IPServeur = "10.10.212.28";
 String IPServeur = "192.168.1.222";
+// String IPServeur = "192.168.1.139"; // Pour tester sur un autre robot.
 
 // Numéro du port sur lequel écoute le serveur.
 int portServeur = 5000;
 
 // Logo indiquant que c'est un logiciel client.
 // PImage imageDuClient;
-PImage LEDOn;
-PImage LEDOff;
 PImage flecheHaut;
 PImage flecheBas;
 PImage flecheGauche;
@@ -53,15 +52,10 @@ PImage flecheHautGauche;
 PImage flecheBasDroite;
 PImage flecheBasGauche;
 PImage arret;
-PImage flecheIntensiteeHaut;
-PImage flecheIntensiteeBas;
+PImage flecheIntensiteHaut;
+PImage flecheIntensiteBas;
 /**/
-PImage porteFermee;
-PImage porteOuverte;
-PImage porte;
 
-String instructionPorte;
-boolean etatPorte;
 String instructionLED;
 String[] tabInstructionLED = {"10", "11", "20", "21", "30", "31", "40", "41"};
 String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
@@ -70,69 +64,56 @@ String instructionArret = "90";
 String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"};
 String instructionIntensitee;
 int intensite;
-int[][] tabPositionFleche = {{270, 75}, {270, 315}, {270, 195}, {420, 195}, {110, 195}, {420, 75}, {110, 75}, {420, 315}, {110, 315}};
-int[][] tabPositionIntensitee = {{300, 475}, {300, 575}};
+int[][] tabPositionFleche = {{320, 125}, {320, 365}, {320, 245}, {470, 245}, {160, 245}, {470, 125}, {160, 125}, {470, 365}, {160, 365}};
+int[][] tabPositionIntensitee = {{340, 505}, {340, 575}};
 
 String instructionRobot;
-boolean LED1 = false;
-boolean LED2 = false;
-boolean LED3 = false;
-boolean LED4 = false;
-boolean[] LED = {false, false, false, false};
-int[] LEDPos = {10, 180, 360, 540};
 
 /******************************************
 * Fonction setup()                        *
 *******************************************/
 void setup()
 {
+  // Initialisation de la fenêtre graphique.
   background(255);
   size(750, 900);
   textSize(24);
   fill(0);
-  // imageDuClient = loadImage("Client.jpg");
-  // image(imageDuClient, 15, 0);
-  LEDOn = loadImage("../images/haut.png");
-  LEDOff = loadImage("../images/bas.png");
-  porteFermee = loadImage("../images/intensitee_bas.png");
-  porteOuverte = loadImage("../images/intensitee_haut.png");
-  porteOuverte.resize(112, 200);
+
+  // Initialisation des variables à envoyer au robot.
   intensite = 1;
   instructionFleche = "2";
-{
-  flecheHaut = loadImage("../images/haut.png");
-  flecheBas = loadImage("../images/bas.png");
-  flecheGauche = loadImage("../images/gauche.png");
-  flecheDroite = loadImage("../images/droite.png");
-  flecheHautDroite = loadImage("../images/haut_droite.png");
-  flecheHautGauche = loadImage("../images/haut_gauche.png");
-  flecheBasDroite = loadImage("../images/bas_droite.png");
-  flecheBasGauche = loadImage("../images/bas_gauche.png");
-  arret = loadImage("../images/basic_circle.png");
-  flecheIntensiteeHaut = loadImage("../images/intensitee_haut.png");
-  flecheIntensiteeBas = loadImage("../images/intensitee_bas.png");
-  flecheHaut.resize(200, 180);
-  flecheBas.resize(200, 180);
-  flecheGauche.resize(200, 180);
-  flecheDroite.resize(200, 180);
-  flecheHautDroite.resize(200, 180);
-  flecheHautGauche.resize(200, 180);
-  flecheBasDroite.resize(200, 180);
-  flecheBasGauche.resize(200, 180);
-  arret.resize(200, 180);
-  flecheIntensiteeHaut.resize(120, 100);
-  flecheIntensiteeBas.resize(120, 100);
-}
 
-  instructionPorte = "00";
-  porte = porteOuverte;
+  // Ouverture des images et redimensionnement.
+  {
+    flecheHaut = loadImage("../images/haut.png");
+    flecheBas = loadImage("../images/bas.png");
+    flecheGauche = loadImage("../images/gauche.png");
+    flecheDroite = loadImage("../images/droite.png");
+    flecheHautDroite = loadImage("../images/haut_droite.png");
+    flecheHautGauche = loadImage("../images/haut_gauche.png");
+    flecheBasDroite = loadImage("../images/bas_droite.png");
+    flecheBasGauche = loadImage("../images/bas_gauche.png");
+    arret = loadImage("../images/arret.png");
+    flecheIntensiteHaut = loadImage("../images/intensite_haut.png");
+    flecheIntensiteBas = loadImage("../images/intensite_bas.png");
+    flecheHaut.resize(100, 90);
+    flecheBas.resize(100, 90);
+    flecheGauche.resize(100, 90);
+    flecheDroite.resize(100, 90);
+    flecheHautDroite.resize(100, 90);
+    flecheHautGauche.resize(100, 90);
+    flecheBasDroite.resize(100, 90);
+    flecheBasGauche.resize(100, 90);
+    arret.resize(100, 90);
+    flecheIntensiteHaut.resize(60, 40);
+    flecheIntensiteBas.resize(60, 40);
+  }
 
-  // Tentative de connexion au serveur 192.168.1.148, écoutant sur le port 5000.
+
   println("Tentative de connexion avec le serveur...");
-  //text("Tentative de connexion avec le serveur...", 30, 60);
-  /*client = new Client(this, IPServeur, portServeur);
-  serveur = new Server(this, portServeur);
-  //client.write(instructionPorte);*/
+
+  // Connexion au serveur.
   client = new Client(this, IPServeur, portServeur);
 }
 
@@ -147,18 +128,6 @@ void draw()
   if(client.active())
   {    
     text("Le client est connecté au serveur " + IPServeur + ".", 140, 60);
-    //println("Le client est connecté au serveur " + IPServeur + ".");
-    if (client.available() > 0) {
-      String message = client.readStringUntil('\n');
-      if (message != null) {
-        message = message.substring(0, message.length() - 1);
-        if (message.equals("1")) {
-          text("Le serveur a reçu la commande " + instructionRobot + ".", 30, 90);
-        } else if (message.equals("0")) {
-          text("Le serveur n'a pas reçu la commande " + instructionRobot + ".", 30, 90);
-        }
-      }
-    }
   }
   else
   {
@@ -166,29 +135,29 @@ void draw()
     text("ou le serveur n'est plus disponible.", 30, 90);
     println("Le client n'a pas pu se connecter au serveur " + IPServeur + " ou le serveur n'est plus disponible.");
   }
-
-  text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
-  image(flecheHaut, 270, 75);
-  image(flecheBas, 270, 315);
-  image(flecheGauche, 110, 195);
-  image(flecheDroite, 420, 195);
-  image(flecheHautDroite, 420, 75);
-  image(flecheHautGauche, 110, 75);
-  image(flecheBasDroite, 420, 315);
-  image(flecheBasGauche, 110, 315);
-  image(flecheIntensiteeBas, 300, 575);
-  image(flecheIntensiteeHaut, 300, 475);
-  image(arret, 270, 195);
-  text("Intensité : " + intensite, 320, 700);
-  instructionRobot = instructionFleche + char(intensite + 48);
-  text("Instruction envoyée au robot : " + instructionRobot, 30, 800);
-
+  {
+    text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
+    image(flecheHaut, 320, 125);
+    image(flecheBas, 320, 365);
+    image(flecheGauche, 160, 245);
+    image(flecheDroite, 470, 245);
+    image(flecheHautDroite, 470, 125);
+    image(flecheHautGauche, 160, 125);
+    image(flecheBasDroite, 470, 365);
+    image(flecheBasGauche, 160, 365);
+    image(flecheIntensiteBas, 340, 575);
+    image(flecheIntensiteHaut, 340, 505);
+    image(arret, 320, 245);
+    text("Intensité : " + intensite, 320, 700);
+    instructionRobot = instructionFleche + char(intensite + 48);
+    text("Instruction envoyée au robot : " + instructionRobot, 30, 800);
+  }
 }
 
 void mouseClicked(){
   for(int i = 0; i < 9; i++){
-    if (mouseX > tabPositionFleche[i][0] && mouseX < tabPositionFleche[i][0] + 200 &&
-        mouseY > tabPositionFleche[i][1] && mouseY < tabPositionFleche[i][1] + 180) {
+    if (mouseX > tabPositionFleche[i][0] && mouseX < tabPositionFleche[i][0] + 100 &&
+        mouseY > tabPositionFleche[i][1] && mouseY < tabPositionFleche[i][1] + 90) {
       instructionFleche = tabInstructionFleche[i];
       //client.write(instructionFleche);
       println("j'ai écrit", instructionFleche);
@@ -197,8 +166,8 @@ void mouseClicked(){
     }
   }
   for (int j = 0; j < 2; j++){
-    if (mouseX > tabPositionIntensitee[j][0] && mouseX < tabPositionIntensitee[j][0] + 120 &&
-        mouseY > tabPositionIntensitee[j][1] && mouseY < tabPositionIntensitee[j][1] + 100) {
+    if (mouseX > tabPositionIntensitee[j][0] && mouseX < tabPositionIntensitee[j][0] + 60 &&
+        mouseY > tabPositionIntensitee[j][1] && mouseY < tabPositionIntensitee[j][1] + 40) {
       //instructionIntensitee = tabInstructionIntensitee[j];
       println("j'ai écrit", tabInstructionIntensitee[j]);
       if (j == 0){

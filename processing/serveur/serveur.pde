@@ -1,83 +1,78 @@
+// Importation des classes nécessaires pour travailler avec une base de données Access et les connexions réseau
 com.healthmarketscience.jackcess.Database db;
 com.healthmarketscience.jackcess.Table table;
-
 import processing.net.Server;
 import processing.net.Client;
 
-Server serveur;
 
-int portServeur = 5000;
+// Déclaration des variables
+Server serveur; // Objet de type Server pour gérer le serveur
 
-String messageConnexion = "En attente de connexion...";
-String requeteClient = "Allons-y";
+int portServeur = 5000; // Numéro du port sur lequel le serveur écoute
 
-String IPRequete = "";
-int mouvementRequete = ' ';
-int intensiteRequete = ' ';
-String dateRequete = "";
+String messageConnexion = "En attente de connexion..."; // Message affiché lorsqu'on attend une connexion
+String requeteClient = "Allons-y"; // Requête envoyée par le client
+
+String IPRequete = ""; // Adresse IP de la requête
+int mouvementRequete = ' '; // Mouvement de la requête (caractère)
+int intensiteRequete = ' '; // Intensité de la requête (caractère)
+String dateRequete = ""; // Date de la requête
 
 void setup()
 {
-  size(750, 400);
-  background(255);
-  fill(0);
-  println("Tentative de démarrage du serveur...");
-  text("Tentative de démarrage du serveur...", 30, 160);
+  size(750, 400); // Définit la taille de la fenêtre de l'application.
+  background(255); // Définit la couleur de fond de la fenêtre en blanc.
+  fill(0); // Définit la couleur de remplissage en noir.
+  println("Tentative de démarrage du serveur..."); // Affiche un message dans la console.
+  text("Tentative de démarrage du serveur...", 30, 160); // Affiche un message à l'écran.
 
-  serveur = new Server(this, portServeur);
+  serveur = new Server(this, portServeur); // Crée une instance du serveur avec le port spécifié.
 
   try{
-    db = DatabaseBuilder.open(new File(dataPath("") +"/logsMouvementsRobot.accdb"));
-    println("Connexion à la base de données réussie.");
+    db = DatabaseBuilder.open(new File(dataPath("") +"/logsMouvementsRobot.accdb")); // Ouvre la base de données Access spécifiée.
+    println("Connexion à la base de données réussie."); // Affiche un message dans la console.
 
-    table = db.getTable("logs");
-    println("Connexion à la table réussie.");
+    table = db.getTable("logs"); // Récupère la table "logs" de la base de données.
+    println("Connexion à la table réussie."); // Affiche un message dans la console.
   }
-  catch(IOException erreur)
+  catch(IOException erreur) // Si une erreur est survenue lors de la connexion à la base de données.
   {
-    println("Erreur lors de la connexion à la base de données.");
+    println("Erreur lors de la connexion à la base de données."); // Affiche un message d'erreur dans la console.
   }
-  catch(Exception erreur)
+  catch(Exception erreur) // Si une erreur est survenue lors de la connexion à la table.
   {
-    println("Erreur lors de la connexion à la table.");
+    println("Erreur lors de la connexion à la table."); // Affiche un message d'erreur dans la console.
   }
 
 }
 
 void draw()
 {
-   Client client;
+  Client client; // Déclaration d'une variable de type Client pour gérer la connexion client
 
-  background(255);
-  if(serveur.active())
+  background(255); // Remplit la fenêtre avec une couleur de fond blanche
+  if(serveur.active()) // Vérifie si le serveur est actif
   {    
-    text("Le serveur est démarré sur le port " + portServeur + this + ".", 30, 60);
-    //println("Le serveur est démarré sur le port " + portServeur + ".");
-    text(messageConnexion, 30, 105);
-    //text("Requête du client : " + requeteClient, 30, 135);
+    text("Le serveur est démarré sur le port " + portServeur + this + ".", 30, 60);// Affiche un message indiquant que le serveur est démarré sur le port spécifié
     
-    client = serveur.available();
-    //requeteClient = "Non pas tout de suite.";
+    text(messageConnexion, 30, 105); // Affiche le message de connexion
+    
+    client = serveur.available(); // Vérifie si un client est disponible pour se connecter
 
-    if (client != null) {
-        //requeteClient = "Tu me vois ?";
-        IPRequete = client.readStringUntil(' ');
-        mouvementRequete = client.read() - 48;
-        intensiteRequete = client.read() - 48;
-        if(IPRequete != null && mouvementRequete != ' ' && intensiteRequete != ' ')
+    if (client != null) { // Vérifie si un client est connecté
+        IPRequete = client.readStringUntil(' '); // Lit l'adresse IP de la requête du client jusqu'à ce qu'il rencontre le caractère ' '
+        mouvementRequete = client.read() - 48; // Lit le mouvement de la requête et soustrait 48 pour convertir la valeur ASCII en entier
+        intensiteRequete = client.read() - 48; // Lit l'intensité de la requête et soustrait 48 pour convertir la valeur ASCII en entier
+        if(IPRequete != null && mouvementRequete != ' ' && intensiteRequete != ' ') // Vérifie si les informations de la requête sont valides (ne sont pas vides).
         {
-          IPRequete = IPRequete.substring(0, IPRequete.length() - 1);
+          IPRequete = IPRequete.substring(0, IPRequete.length() - 1); // Supprime le dernier caractère (' ') de l'adresse IP
           
           //mouvementRequete = mouvementRequete.substring(0, mouvementRequete.length() - 1);
           
-          println("Requête du client : " + IPRequete + " mouvement : " + mouvementRequete + " avec une intensitee : " + intensiteRequete);
-          //intensiteRequete = intensiteRequete.substring(0, intensiteRequete.length() - 1);
-          //println("Requête du client : " + requeteClient);
-            //requeteClient = requeteClient.substring(0, requeteClient.length() - 1);
-          //println("Requête du client : " + requeteClient);
+          println("Requête du client : " + IPRequete + " mouvement : " + mouvementRequete + " avec une intensitee : " + intensiteRequete); // Affiche les informations de la requête dans la console
           try
           {
-            table.addRow(0, IPRequete, mouvementRequete, intensiteRequete, hour(), minute(), second());
+            table.addRow(0, IPRequete, mouvementRequete, intensiteRequete, hour(), minute(), second()); // Ajoute la requête dans la base de données avec les informations correspondantes et l'heure actuelle
             println("Ajout de la requête dans la base de données réussie.");
           }
           catch(IOException erreur)
@@ -86,7 +81,7 @@ void draw()
           }
           client.write("1\n");
         }
-      text(messageConnexion, 30, 90);
+      text(messageConnexion, 30, 90); // Affiche le message de connexion
     }
     //text("Le client est connecté au serveur " + IPServeur + ".", 30, 120);
     //println("Le client est connecté au serveur " + IPServeur + ".");
@@ -99,14 +94,16 @@ void draw()
   }
 }
 
+// Fonction appelée lorsqu'un client se connecte au serveur
 void serverEvent(Server serveur, Client client)
 {
-  messageConnexion = client.ip() + " s'est connecté.";
-  println("Nouvelle connexion");
+  messageConnexion = client.ip() + " s'est connecté."; // Enregistre l'adresse IP du client connecté
+  println("Nouvelle connexion"); // Affiche un message dans la console pour indiquer une nouvelle connexion
 }
 
+// Fonction appelée lorsqu'un client se déconnecte du serveur
 void disconnectEvent(Client client)
 {
-  println("Déconnexion");
-  messageConnexion = "déconnecté.";
+  println("Déconnexion"); // Affiche un message dans la console pour indiquer une déconnexion
+  messageConnexion = "déconnecté."; // Met à jour le message de connexion pour indiquer que le client s'est déconnecté
 }
