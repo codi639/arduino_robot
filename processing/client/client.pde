@@ -1,5 +1,5 @@
 /***************************************************************************
- * Nom du fichier : TP3.pde                                                *
+ * Nom du fichier : client.pde                                                *
  * Auteur : Jean-Lou Gilbertas                                             *
  * Date de dernière modification : 05 mai 2023                             *
  * Description : Ce programme permet de contrôler un robot à l'aide d'une  *
