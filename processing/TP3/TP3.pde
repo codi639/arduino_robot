@@ -3,6 +3,32 @@
  * Auteur : Jean-Lou Gilbertas                                             *
  * Date de dernière modification : 05 mai 2023                             *
  * Description : Ce programme permet de contrôler un robot à l'aide d'une  *
+ * interface graphique.                                                    *
+ *                                                                         *
+ * Le programme est composé de deux parties :                              *
+ *   - La première partie est l'interface graphique.                       *
+ *   - La deuxième partie est la connexion avec le robot.                  *
+ *                                                                         *
+ * L'interface graphique est composée de :                                 *
+ *   - 9 flèches pour contrôler le robot.                                  *
+ *   - 2 flèches pour contrôler l'intensité des mouvements.                *
+ *                                                                         *
+ * La connexion avec le robot est composée de :                            *
+ *   - Une adresse IP.                                                     *
+ *   - Un port.                                                            *
+ *                                                                         *
+ * Le programme est composé de 3 fonctions :                               *
+ *   - La fonction setup()                                                 *
+ *   - La fonction draw()                                                  *
+ *   - La fonction mousePressed()                                          *
+ *                                                                         *
+ * La fonction setup() est utilisée pour initialiser les variables et la   *
+ * connexion avec le serveur.                                              *
+ *                                                                         *
+ * La fonction draw() est utilisée pour afficher l'interface graphique.    *
+ *                                                                         *
+ * La fonction mousePressed() est utilisée pour envoyer les instructions   *
+ * au robot.                                                               *
  ***************************************************************************/
 
 // Le mot-clé import est utilisé pour charger une bibliothèque dans un programme (sketch).
@@ -50,11 +76,10 @@ PImage flecheIntensiteHaut;
 PImage flecheIntensiteBas;
 
 // Variables pour les instructions.
-String instructionLED;
-String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
+String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"}; // 0 = haut, 1 = bas, 2 = arrêt, 3 = droite, 4 = gauche, 5 = haut-droite, 6 = haut-gauche, 7 = bas-droite, 8 = bas-gauche.
 String instructionFleche;
-String instructionArret = "90";
-String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"};
+String instructionArret = "90"; // 90 = arrêt (instruction unique).
+String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"}; // 1 = virage très doux, 2 = virage doux, 3 = virage normal, 4 = virage serré, 5 = virage très serré.
 String instructionIntensitee;
 int intensite;
 

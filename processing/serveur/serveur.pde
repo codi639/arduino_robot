@@ -6,6 +6,8 @@
  * qui va permette d'insérer dans une base de          *
  * données toutes les requêtes que le Robot qui        *
  * y sera connecté recevra.                            *
+ *                                                     *
+ 
  *******************************************************/
 
 /******************************************
