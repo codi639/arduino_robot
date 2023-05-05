@@ -1,3 +1,18 @@
+/*******************************************************************************************
+ * Nom du fichier : reception_octet.ino                                                    *
+ * Auteur : Jean-Lou Gilbertas                                                             *
+ * Dernière date de modification : 05 mai 2023                                             *
+ * Description : Programme permettant de recevoir des octets et de les traiter avec une    *
+ *               carte Arduino Uno.                                                        *
+ *                                                                                         *
+ * Le programme est composé de deux parties :                                              *
+ * - La première partie est la mise en place du serveur (à l'écoute d'un client            *
+ *   processing) et la connexion au serveur processign pour la base de données.            *
+ * - La seconde partie est la gestion des moteur du robot en fonction des instructions     *
+ *   qu'il aura reçu du client Processing, et l'envoie des requete au serveur Access.      *
+ *******************************************************************************************/
+
+
 
 #include <WiFiNINA.h>
 #define BROCHE_DIRECTION_M1M3_GND 4

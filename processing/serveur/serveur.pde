@@ -5,9 +5,8 @@
  * L'objectif de ce programme et de créer un serveur   *
  * qui va permette d'insérer dans une base de          *
  * données toutes les requêtes que le Robot qui        *
- * y sera connecté recevra.                            *
- *                                                     *
- 
+ * y sera connecté recevra (inclut l'adresse de        *
+ * l'expéditeur, le mouvement et l'intensité).         *
  *******************************************************/
 
 /******************************************
