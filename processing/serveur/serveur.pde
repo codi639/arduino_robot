@@ -1,22 +1,50 @@
-// Importation des classes nécessaires pour travailler avec une base de données Access et les connexions réseau
-com.healthmarketscience.jackcess.Database db;
-com.healthmarketscience.jackcess.Table table;
+/******************************************************
+ * Nom du fichier : serveur.pde                        *
+ * Auteur : Jean-Lou Gilbertas                         *
+ * Date de dernière modification : 05 mai 2023         *
+ * L'objectif de ce programme et de créer un serveur   *
+ * qui va permette d'insérer dans une base de          *
+ * données toutes les requêtes que le Robot qui        *
+ * y sera connecté recevra.                            *
+ *******************************************************/
+
+/******************************************
+ * Imports et variables globales           *
+ *                                         *
+ * Cette section permet d'importer les     *
+ * classes nécessaires pour travailler     *
+ * avec une base de données Access et les  *
+ * connexions réseau.                      *
+ *******************************************/
+
+// Importation des classes
 import processing.net.Server;
 import processing.net.Client;
 
 
 // Déclaration des variables
+com.healthmarketscience.jackcess.Database db; // Objet de type Database pour gérer la base de données
+com.healthmarketscience.jackcess.Table table; // Objet de type Table pour gérer la table de la base de données
 Server serveur; // Objet de type Server pour gérer le serveur
 
 int portServeur = 5000; // Numéro du port sur lequel le serveur écoute
 
 String messageConnexion = "En attente de connexion..."; // Message affiché lorsqu'on attend une connexion
-String requeteClient = "Allons-y"; // Requête envoyée par le client
+//String requeteClient = ""; // Requête envoyée par le client
 
 String IPRequete = ""; // Adresse IP de la requête
 int mouvementRequete = ' '; // Mouvement de la requête (caractère)
 int intensiteRequete = ' '; // Intensité de la requête (caractère)
 String dateRequete = ""; // Date de la requête
+
+/******************************************
+ * Fonction setup()                        *
+ * Cette fonction va s'exécuter une seule  *
+ * fois au démarrage de l'application.     *
+ * Elle va permettre de démarrer le        *
+ * serveur et de se connecter à la base de *
+ * données.                                *
+ *******************************************/
 
 void setup()
 {
@@ -45,6 +73,14 @@ void setup()
   }
 
 }
+
+/******************************************
+ * Fonction draw()                         *
+ * Cette fonction va s'exécuter en boucle  *
+ * et va permettre de gérer les connexions *
+ * des clients et d'insérer les requêtes   *
+ * dans la base de données.                *
+ *******************************************/
 
 void draw()
 {
@@ -94,14 +130,26 @@ void draw()
   }
 }
 
-// Fonction appelée lorsqu'un client se connecte au serveur
+/******************************************
+ * Fonction serveurEvent()                 *
+ * Cette fonction va s'exécuter à chaque   *
+ * fois qu'un client se connecte au        *
+ * serveur.                                *
+ *******************************************/
+
 void serverEvent(Server serveur, Client client)
 {
   messageConnexion = client.ip() + " s'est connecté."; // Enregistre l'adresse IP du client connecté
   println("Nouvelle connexion"); // Affiche un message dans la console pour indiquer une nouvelle connexion
 }
 
-// Fonction appelée lorsqu'un client se déconnecte du serveur
+/******************************************
+ * Fonction disconnectEvent()              *
+ * Cette fonction va s'exécuter à chaque   *
+ * fois qu'un client se déconnecte du      *
+ * serveur.                                *
+ *******************************************/
+
 void disconnectEvent(Client client)
 {
   println("Déconnexion"); // Affiche un message dans la console pour indiquer une déconnexion

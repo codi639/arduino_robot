@@ -1,13 +1,8 @@
 /***************************************************************************
- * Nom du fichier : ProcessingClientConnexion.pde                          *
- * Auteur : Guy Toutant                                                    *
- * Date de dernière modification : 21 mars 2023                            *
- * Référence de Processing : https://processing.org/reference.             *
- * Logiciel client IP se connectant à un logiciel serveur IP.              *
- * Les deux logiciels s'exécutent sur le même ordinateur.                  *
- * Le code inclut l'adresse IP du serveur et le port sur lequel il écoute. *
- * L'utilisateur est informé de la réussite ou non de la connexion.        *
- * Le client affiche l'adresse IP du serveur auquel il est connecté.       *
+ * Nom du fichier : TP3.pde                                                *
+ * Auteur : Jean-Lou Gilbertas                                             *
+ * Date de dernière modification : 05 mai 2023                             *
+ * Description : Ce programme permet de contrôler un robot à l'aide d'une  *
  ***************************************************************************/
 
 // Le mot-clé import est utilisé pour charger une bibliothèque dans un programme (sketch).
@@ -41,8 +36,7 @@ String IPServeur = "192.168.1.222";
 // Numéro du port sur lequel écoute le serveur.
 int portServeur = 5000;
 
-// Logo indiquant que c'est un logiciel client.
-// PImage imageDuClient;
+// Variable d'images pour les flèches.
 PImage flecheHaut;
 PImage flecheBas;
 PImage flecheGauche;
@@ -54,24 +48,32 @@ PImage flecheBasGauche;
 PImage arret;
 PImage flecheIntensiteHaut;
 PImage flecheIntensiteBas;
-/**/
 
+// Variables pour les instructions.
 String instructionLED;
-String[] tabInstructionLED = {"10", "11", "20", "21", "30", "31", "40", "41"};
 String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"};
 String instructionFleche;
 String instructionArret = "90";
 String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"};
 String instructionIntensitee;
 int intensite;
+
+// Variables pour les positions des flèches.
 int[][] tabPositionFleche = {{320, 125}, {320, 365}, {320, 245}, {470, 245}, {160, 245}, {470, 125}, {160, 125}, {470, 365}, {160, 365}};
 int[][] tabPositionIntensitee = {{340, 505}, {340, 575}};
 
+// Variables envoyés au robot afin de le contrôler.
 String instructionRobot;
 
 /******************************************
-* Fonction setup()                        *
-*******************************************/
+ * Fonction setup()                        *
+ * Cette fonction va s'exécuter une seule  *
+ * fois au démarrage de l'application.     *
+ * Elle est utilisée pour initialiser les  *
+ * variables et la fenêtre graphique.      *
+ * Elle va initialiser la connexion avec   *
+ * le serveur.                             *
+ *******************************************/
 void setup()
 {
   // Initialisation de la fenêtre graphique.
@@ -86,6 +88,7 @@ void setup()
 
   // Ouverture des images et redimensionnement.
   {
+    // Ouverture des images.
     flecheHaut = loadImage("../images/haut.png");
     flecheBas = loadImage("../images/bas.png");
     flecheGauche = loadImage("../images/gauche.png");
@@ -97,6 +100,8 @@ void setup()
     arret = loadImage("../images/arret.png");
     flecheIntensiteHaut = loadImage("../images/intensite_haut.png");
     flecheIntensiteBas = loadImage("../images/intensite_bas.png");
+    // Redimensionnement des images.
+    // Pour une question d'optimisation, nous aurions pus utiliser le tableau de positions des flèches pour redimensionner les images.
     flecheHaut.resize(100, 90);
     flecheBas.resize(100, 90);
     flecheGauche.resize(100, 90);
@@ -118,8 +123,14 @@ void setup()
 }
 
 /******************************************
-* Fonction draw()                         *
-*******************************************/
+ * Fonction draw()                         *
+ * Cette fonction va s'exécuter en boucle  *
+ * tant que l'application est ouverte.     *
+ * Elle est utilisée pour afficher les     *
+ * images et les textes.                   *
+ * Elle va envoyer les instructions au     *
+ * robot.                                  *
+ *******************************************/
 void draw()
 {
   background(255);
@@ -129,13 +140,15 @@ void draw()
   {    
     text("Le client est connecté au serveur " + IPServeur + ".", 140, 60);
   }
-  else
+  else // Si la connexion n'est pas active, en informer l'utilisateur.
   {
     text("Le client n'a pas pu se connecter au serveur " + IPServeur, 30, 60);
     text("ou le serveur n'est plus disponible.", 30, 90);
     println("Le client n'a pas pu se connecter au serveur " + IPServeur + " ou le serveur n'est plus disponible.");
   }
+  // Affichage des images et des textes et initialisation des instructions.
   {
+    // Affichage des images et des textes.
     text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
     image(flecheHaut, 320, 125);
     image(flecheBas, 320, 365);
@@ -149,41 +162,62 @@ void draw()
     image(flecheIntensiteHaut, 340, 505);
     image(arret, 320, 245);
     text("Intensité : " + intensite, 320, 700);
+    // Initialisation de l'instruction envoyée au robot.
     instructionRobot = instructionFleche + char(intensite + 48);
+    // Affichage de l'instruction envoyée au robot. (Non nécessaire mais simplifie le débogage, à commenter au besoin).
     text("Instruction envoyée au robot : " + instructionRobot, 30, 800);
   }
 }
 
+/******************************************
+ * Fonction mouseClicked()                 *
+ * Cette fonction va s'exécuter lorsque    *
+ * l'utilisateur va cliquer sur la fenêtre *
+ * graphique.                              *
+ * Elle est utilisée pour envoyer les      *
+ * instructions au robot en fonction de    *
+ * l'endroit où l'utilisateur a cliqué     *
+ * (flèches du haut, du bas, etc.).        *
+ *******************************************/
+
 void mouseClicked(){
-  for(int i = 0; i < 9; i++){
-    if (mouseX > tabPositionFleche[i][0] && mouseX < tabPositionFleche[i][0] + 100 &&
-        mouseY > tabPositionFleche[i][1] && mouseY < tabPositionFleche[i][1] + 90) {
-      instructionFleche = tabInstructionFleche[i];
+  // Boucle de vérification de la position de la souris. Cette partie vérifie si la souris est sur une des flèches directionnelles.
+  // L'instruction à destination du robot est envoyée dans cette partie de la fonction car il n'est pas nécessaire de l'envoyer à chaque changement d'intensité.
+  for(int indiceDirection = 0; indiceDirection < 9; indiceDirection++){ // Bouclage sur les 9 flèches directionnelles.
+    // Si la souris se trouve à la position x à x + 100 et y à y + 90 (les + 100 et + 90 sont pour la taille des images), alors l'instruction est déterminée en fonction de la flèche.
+    if (mouseX > tabPositionFleche[indiceDirection][0] && mouseX < tabPositionFleche[indiceDirection][0] + 100 &&
+        mouseY > tabPositionFleche[indiceDirection][1] && mouseY < tabPositionFleche[indiceDirection][1] + 90) 
+    {
+      // Sélection de l'instruction en fonction de la flèche.
+      instructionFleche = tabInstructionFleche[indiceDirection];
       //client.write(instructionFleche);
-      println("j'ai écrit", instructionFleche);
-      instructionRobot = instructionFleche + char(intensite + 48);
-      client.write(instructionRobot);
+      println("Instruction Flèche : ", instructionFleche); // Débogage (apparait uniquement dans la console, à commenter au besoin).
+      instructionRobot = instructionFleche + char(intensite + 48); // Conversion de l'intensité en caractère ASCII.
+      client.write(instructionRobot); // Envoi de l'instruction au robot.
     }
   }
-  for (int j = 0; j < 2; j++){
-    if (mouseX > tabPositionIntensitee[j][0] && mouseX < tabPositionIntensitee[j][0] + 60 &&
-        mouseY > tabPositionIntensitee[j][1] && mouseY < tabPositionIntensitee[j][1] + 40) {
-      //instructionIntensitee = tabInstructionIntensitee[j];
-      println("j'ai écrit", tabInstructionIntensitee[j]);
-      if (j == 0){
+  // Boucle de vérification de la position de la souris. Cette partie vérifie si la souris est sur une des flèches d'intensité.
+  for (int indiceIntensite = 0; indiceIntensite < 2; indiceIntensite++){
+    if (mouseX > tabPositionIntensitee[indiceIntensite][0] && mouseX < tabPositionIntensitee[indiceIntensite][0] + 60 &&
+        mouseY > tabPositionIntensitee[indiceIntensite][1] && mouseY < tabPositionIntensitee[indiceIntensite][1] + 40) 
+    {
+      //instructionIntensitee = tabInstructionIntensitee[indiceIntensite];
+      println("Intensite : ", tabInstructionIntensitee[indiceIntensite]); // Débogage (apparait uniquement dans la console, à commenter au besoin).
+      // Calcul de l'intensité (si la souris est sur la flèche du haut, l'intensité augmente, si elle est sur la flèche du bas, l'intensité diminue).
+      if (indiceIntensite == 0){
         intensite = intensite + 1;
       }
-      if (j == 1){
+      if (indiceIntensite == 1){
         intensite = intensite - 1;
       }
+      // Vérification que l'intensité est entre 1 et 5 (bloquée entre 1 et 5 (inclus), il est impossble de dépasser ces valeurs).
       if (intensite > 5){
         intensite = 5;
       }
       if (intensite < 1){
         intensite = 1;
       }
-      println(intensite);
-        
+      println(intensite); // Débogage (apparait uniquement dans la console, à commenter au besoin).
     }
   }
 }
