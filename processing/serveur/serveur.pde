@@ -118,8 +118,8 @@ void draw()
           }
           client.write("1\n");
         }
-      text(messageConnexion, 30, 90); // Affiche le message de connexion
     }
+    text(messageConnexion, 30, 90); // Affiche le message de connexion
     //text("Le client est connecté au serveur " + IPServeur + ".", 30, 120);
     //println("Le client est connecté au serveur " + IPServeur + ".");
   }
@@ -140,7 +140,7 @@ void draw()
 
 void serverEvent(Server serveur, Client client)
 {
-  messageConnexion = client.ip() + " s'est connecté."; // Enregistre l'adresse IP du client connecté
+  messageConnexion = "connecté."; // Enregistre l'adresse IP du client connecté
   println("Nouvelle connexion"); // Affiche un message dans la console pour indiquer une nouvelle connexion
 }
 
