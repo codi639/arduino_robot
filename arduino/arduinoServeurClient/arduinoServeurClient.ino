@@ -118,7 +118,7 @@ void loop() {
                 Serial.print("seconde valeur d'intensité ");Serial.println(intensitee); // Débogage (à commenter au besoin).
 
 
-                // En fonction de l'action à effectuer par le robot.
+                #pragma region En fonction de l action à effectuer par le robot.
                 switch(actionRobot)
                 {
                     // Si le robot doit avancer en ligne droite.
@@ -203,6 +203,7 @@ void loop() {
                         serveurProcessing.print(adresseClient[0] + "." + adresseClient[1] + "." + adresseClient[2] + "." + adresseClient[3] + ' ' + 8 + intensiteAEnvoyer);
                         break;
                 }
+                # pragma endregion
             }
         }        
 }

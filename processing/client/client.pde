@@ -31,6 +31,9 @@
  * au robot.                                                               *
  ***************************************************************************/
 
+// Pour simplifier la lecture du code, on utilise des commentaires pour expliquer le fonctionnement du programme. Les commentaires sont ignorés par le compilateur.
+// Par soucis de simplicité à la lecture du code, j'ai mis en place de region qui permettent de cacher le code (en le regroupant) et de le rendre plus lisible.
+
 // Le mot-clé import est utilisé pour charger une bibliothèque dans un programme (sketch).
 // Les bibliothèques de base sont chargées automatiquement. Nul besoin d'énoncés import.
 // Une bibliothèque est composée d'une ou de plusieurs classes (types complexes) regroupées pour étendre les capacités de Processing.
@@ -111,8 +114,7 @@ void setup()
   intensite = 1;
   instructionFleche = "2";
 
-  // Ouverture des images et redimensionnement.
-  {
+  // region Ouverture des images et redimensionnement.
     // Ouverture des images.
     flecheHaut = loadImage("../images/haut.png");
     flecheBas = loadImage("../images/bas.png");
@@ -138,7 +140,7 @@ void setup()
     arret.resize(100, 90);
     flecheIntensiteHaut.resize(60, 40);
     flecheIntensiteBas.resize(60, 40);
-  }
+  // endregion
 
 
   println("Tentative de connexion avec le serveur...");
@@ -171,8 +173,7 @@ void draw()
     text("ou le serveur n'est plus disponible.", 30, 90);
     println("Le client n'a pas pu se connecter au serveur " + IPServeur + " ou le serveur n'est plus disponible.");
   }
-  // Affichage des images et des textes et initialisation des instructions.
-  {
+  // region Affichage des images et des textes et initialisation des instructions.
     // Affichage des images et des textes.
     text("Contrôle d'un robot avec connexion Wi-Fi", 165, 30);
     image(flecheHaut, 320, 125);
@@ -191,7 +192,7 @@ void draw()
     instructionRobot = instructionFleche + char(intensite + 48);
     // Affichage de l'instruction envoyée au robot. (Non nécessaire mais simplifie le débogage, à commenter au besoin).
     text("Instruction envoyée au robot : " + instructionRobot, 30, 800);
-  }
+  // endregion
 }
 
 /******************************************
@@ -228,7 +229,7 @@ void mouseClicked(){
     {
       //instructionIntensitee = tabInstructionIntensitee[indiceIntensite];
       println("Intensite : ", tabInstructionIntensitee[indiceIntensite]); // Débogage (apparait uniquement dans la console, à commenter au besoin).
-      // Calcul de l'intensité (si la souris est sur la flèche du haut, l'intensité augmente, si elle est sur la flèche du bas, l'intensité diminue).
+      // region Calcul de l'intensité (si la souris est sur la flèche du haut, l'intensité augmente, si elle est sur la flèche du bas, l'intensité diminue).
       if (indiceIntensite == 0){
         intensite = intensite + 1;
       }
@@ -243,6 +244,7 @@ void mouseClicked(){
         intensite = 1;
       }
       println(intensite); // Débogage (apparait uniquement dans la console, à commenter au besoin).
+      // endregion
     }
   }
 }
