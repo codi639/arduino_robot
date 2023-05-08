@@ -32,7 +32,7 @@
  ***************************************************************************/
 
 // Pour simplifier la lecture du code, on utilise des commentaires pour expliquer le fonctionnement du programme. Les commentaires sont ignorés par le compilateur.
-// Par soucis de simplicité à la lecture du code, j'ai mis en place de region qui permettent de cacher le code (en le regroupant) et de le rendre plus lisible.
+// Par soucis de simplicité lors l'écriture du code, j'ai mis en place de region qui permettent de cacher le code (en le regroupant) et de le rendre plus lisible.
 
 // Le mot-clé import est utilisé pour charger une bibliothèque dans un programme (sketch).
 // Les bibliothèques de base sont chargées automatiquement. Nul besoin d'énoncés import.
