@@ -1,5 +1,5 @@
 /***************************************************************************
- * Nom du fichier : client.pde                                                *
+ * Nom du fichier : client.pde                                             *
  * Auteur : Jean-Lou Gilbertas                                             *
  * Date de dernière modification : 05 mai 2023                             *
  * Description : Ce programme permet de contrôler un robot à l'aide d'une  *
@@ -81,6 +81,11 @@ PImage flecheIntensiteBas;
 // Variables pour les instructions.
 String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"}; // 0 = haut, 1 = bas, 2 = arrêt, 3 = droite, 4 = gauche, 5 = haut-droite, 6 = haut-gauche, 7 = bas-droite, 8 = bas-gauche.
 String instructionFleche;
+<<<<<<< HEAD
+=======
+String instructionArret = "90"; // 90 = arrêt (instruction unique).
+String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"}; // 1 = virage très doux, 2 = virage doux, 3 = virage normal, 4 = virage serré, 5 = virage très serré. Ce tableau n'est utilisé que pour le débogage.
+>>>>>>> 66894737699abd693182c126ef32d6177f6207a0
 String instructionIntensitee;
 int intensite;
 
