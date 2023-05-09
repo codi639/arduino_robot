@@ -81,8 +81,6 @@ PImage flecheIntensiteBas;
 // Variables pour les instructions.
 String[] tabInstructionFleche = {"0", "1", "2", "3", "4", "5", "6", "7", "8"}; // 0 = haut, 1 = bas, 2 = arrêt, 3 = droite, 4 = gauche, 5 = haut-droite, 6 = haut-gauche, 7 = bas-droite, 8 = bas-gauche.
 String instructionFleche;
-String instructionArret = "90"; // 90 = arrêt (instruction unique).
-String[] tabInstructionIntensitee = {"1", "2", "3", "4", "5"}; // 1 = virage très doux, 2 = virage doux, 3 = virage normal, 4 = virage serré, 5 = virage très serré.
 String instructionIntensitee;
 int intensite;
 
@@ -227,8 +225,6 @@ void mouseClicked(){
     if (mouseX > tabPositionIntensitee[indiceIntensite][0] && mouseX < tabPositionIntensitee[indiceIntensite][0] + 60 &&
         mouseY > tabPositionIntensitee[indiceIntensite][1] && mouseY < tabPositionIntensitee[indiceIntensite][1] + 40) 
     {
-      //instructionIntensitee = tabInstructionIntensitee[indiceIntensite];
-      println("Intensite : ", tabInstructionIntensitee[indiceIntensite]); // Débogage (apparait uniquement dans la console, à commenter au besoin).
       // region Calcul de l'intensité (si la souris est sur la flèche du haut, l'intensité augmente, si elle est sur la flèche du bas, l'intensité diminue).
       if (indiceIntensite == 0){
         intensite = intensite + 1;
